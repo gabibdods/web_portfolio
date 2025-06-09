@@ -1,4 +1,3 @@
-<<<<<<< README.md
 # 🌍 Personal Portfolio Website — Live Production Django Server
 
 A full-featured personal website for recruiters, collaborators, and visitors to view my portfolio, send me messages, and subscribe to my game development newsletter. Built using Django in **production mode**, integrated with Gunicorn and NGINX for performance, and enriched with HTML, CSS, JavaScript, and PHP for interactive frontend and dynamic backend behavior.
