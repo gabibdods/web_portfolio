@@ -4,9 +4,9 @@
     known_hosts_path: "{{ lookup('env', 'KNOWN_HOSTS_PATH') }}"
     dest_path: "{{ lookup('env', 'DEST_PATH') }}"
     collectstatic_command: "{{ lookup('env', 'COLLECTSTATIC_COMMAND') }}"
-    ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+    remote_deploy_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
   become: true
-  become_user: "{{ ansible_user }}"
+  become_user: "{{ remote_deploy_user }}"
   tasks:
     - name: whoami
       command: whoami
@@ -19,7 +19,7 @@
 
     - name: Pull latest code
       ansible.builtin.git:
-        repo: 'git@gitlab.com:web-port/web_portfolio.git'
+        repo: 'git@gitlab.com:gabibdods/web_portfolio.git'
         dest: "{{ dest_path }}"
         version: main
         force: yes
@@ -33,7 +33,7 @@
 
     - name: Reload systemd
       become: true
-      become_user: "{{ ansible_user }}"
+      become_user: "{{ remote_deploy_user }}"
       command: systemctl daemon-reload
 
     - name: Restart Gunicorn
