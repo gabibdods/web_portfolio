@@ -37,14 +37,20 @@
       command: systemctl daemon-reload
 
     - name: Restart Gunicorn
+      become: true
+      become_user: root
       systemd:
         name: gunicorn
         state: restarted
 
     - name: Test Nginx config
+      become: true
+      become_user: root
       command: nginx -t
 
     - name: Restart Nginx
+      become: true
+      become_user: root
       systemd:
         name: nginx
         state: restarted
