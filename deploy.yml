@@ -1,14 +1,16 @@
 - name: Deploy Django updates
-  hosts: web
-  become: yes
+  hosts: all
   vars:
     known_hosts_path: "{{ lookup('env', 'KNOWN_HOSTS_PATH') }}"
     dest_path: "{{ lookup('env', 'DEST_PATH') }}"
-    chdir_path: "{{ lookup('env', 'CHDIR_PATH') }}"
     collectstatic_command: "{{ lookup('env', 'COLLECTSTATIC_COMMAND') }}"
-    deploy_log_path: "{{ lookup('env', 'DEPLOY_LOG_PATH') }}"
     ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
+  become: true
+  become_user: {{ ansible_user }}
   tasks:
+    - name: whoami
+      command: whoami
+    
     - name: Ensure gitlab.com is in known_hosts
       ansible.builtin.known_hosts:
         name: gitlab.com
@@ -16,7 +18,6 @@
         path: "{{ known_hosts_path }}"
 
     - name: Pull latest code
-      become: no
       ansible.builtin.git:
         repo: 'git@gitlab.com:web-port/web_portfolio.git'
         dest: "{{ dest_path }}"
@@ -24,13 +25,15 @@
         force: yes
 
     - name: Collect static files as www-data
-      become: yes
+      become: true
       become_user: www-data
       args:
-        chdir: "{{ chdir_path }}"
+        chdir: "{{ dest_path }}"
       command: "{{ collectstatic_command }}"
 
     - name: Reload systemd
+      become: true
+      become_user: {{ ansible_user }}
       command: systemctl daemon-reload
 
     - name: Restart Gunicorn
