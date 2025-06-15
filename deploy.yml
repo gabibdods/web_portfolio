@@ -33,7 +33,7 @@
 
     - name: Reload systemd
       become: true
-      become_user: {{ ansible_user }}
+      become_user: "{{ ansible_user }}"
       command: systemctl daemon-reload
 
     - name: Restart Gunicorn
