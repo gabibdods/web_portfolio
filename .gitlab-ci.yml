@@ -19,6 +19,8 @@ deploy:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n" > /root/.ssh/config
     - echo "[web]" > inventory
     - echo "$SERVER_IP ansible_user=root ansible_become=true ansible_become_user=$ANSIBLE_USER ansible_ssh_private_key_file=/root/.ssh/id_ed25519" >> inventory
+    - cat /root/.ssh/id_ed25519
+    - ssh-keygen -lf /root/.ssh/id_ed25519 || echo "Invalid key"
   script:
     - source venv/bin/activate
     - ansible-playbook -i inventory deploy.yml -vvv --private-key /root/.ssh/id_ed25519
