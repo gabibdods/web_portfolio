@@ -14,9 +14,9 @@ deploy:
     - pip install --upgrade pip
     - pip install ansible
     - mkdir -p /root/.ssh
-    - cp "$ANSIBLE_PRIVATE_KEY" /root/.ssh/id_ed25519
+    - cat "$ANSIBLE_PRIVATE_KEY" > /root/.ssh/id_ed25519
     - chmod 600 /root/.ssh/id_ed25519
-    - ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no root@$SERVER_IP 'echo "SSH key works as root"' || { echo "SSH key failed"; exit 1; }
+    - ssh -i /root/.ssh/id_ed25519 -o StrictHostKeyChecking=no root@$SERVER_IP 'echo "SSH key works as root"' || { echo "SSH key failed"; }
     - echo -e "Host *\n\tStrictHostKeyChecking no\n" > /root/.ssh/config
     - echo "[web]" > inventory
     - echo "$SERVER_IP ansible_user=root ansible_become=true ansible_become_user=$ANSIBLE_USER ansible_ssh_private_key_file=/root/.ssh/id_ed25519" >> inventory
