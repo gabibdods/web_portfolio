@@ -16,11 +16,11 @@ deploy:
     - mkdir -p /root/.ssh
     - cp "$ANSIBLE_PRIVATE_KEY" /root/.ssh/id_ed25519
     - chmod 600 /root/.ssh/id_ed25519
+    - ssh-keygen -lf /root/.ssh/id_ed25519 || { echo "Invalid private key!"; exit 1; }
     - echo -e "Host *\n\tStrictHostKeyChecking no\n" > /root/.ssh/config
     - echo "[web]" > inventory
     - echo "$SERVER_IP ansible_user=root ansible_become=true ansible_become_user=$ANSIBLE_USER ansible_ssh_private_key_file=/root/.ssh/id_ed25519" >> inventory
-    - file "$ANSIBLE_PRIVATE_KEY"
-    - cat "$ANSIBLE_PRIVATE_KEY" | head -n 1
+    - ssh-keygen -lf /root/.ssh/id_ed25519
   script:
     - source venv/bin/activate
     - ansible-playbook -i inventory deploy.yml -vvv --private-key /root/.ssh/id_ed25519
