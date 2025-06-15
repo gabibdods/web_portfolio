@@ -14,8 +14,6 @@
         name: gitlab.com
         key: "{{ lookup('pipe', 'ssh-keyscan gitlab.com') }}"
         path: "{{ known_hosts_path }}"
-      debug:
-        msg: "ensured gitlab.com is in known_hosts"
 
     - name: Pull latest code
       become: no
@@ -24,8 +22,6 @@
         dest: "{{ dest_path }}"
         version: main
         force: yes
-      debug:
-        msg: "pulled latest code"
 
     - name: Collect static files as www-data
       become: yes
@@ -33,33 +29,19 @@
       args:
         chdir: "{{ chdir_path }}"
       command: "{{ collectstatic_command }}"
-      debug:
-        msg: "collected static files as www-data"
 
     - name: Reload systemd
       command: systemctl daemon-reload
-      debug:
-        msg: "reloaded systemd"
 
     - name: Restart Gunicorn
       systemd:
         name: gunicorn
         state: restarted
-      debug:
-        msg: "restarted Gunicorn"
 
     - name: Test Nginx config
       command: nginx -t
-      debug:
-        msg: "tested Nginx config"
 
     - name: Restart Nginx
       systemd:
         name: nginx
         state: restarted
-      debug:
-        msg: "restarted Nginx"
-
-    - name: Log deployment success
-      become_user: "{{ ansible_user }}"
-      command: echo "Deployment completed successfully on $(date)" >> "{{ deploy_log_path }}"
