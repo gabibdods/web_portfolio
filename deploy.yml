@@ -6,7 +6,7 @@
     collectstatic_command: "{{ lookup('env', 'COLLECTSTATIC_COMMAND') }}"
     ansible_user: "{{ lookup('env', 'ANSIBLE_USER') }}"
   become: true
-  become_user: {{ ansible_user }}
+  become_user: "{{ ansible_user }}"
   tasks:
     - name: whoami
       command: whoami
