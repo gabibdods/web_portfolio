@@ -24,3 +24,5 @@ deploy:
     - ansible-playbook -i inventory deploy.yml -vvv --private-key /root/.ssh/id_ed25519
   only:
     - main
+  artifacts:
+    expire_in: 1 minute
