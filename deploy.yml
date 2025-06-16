@@ -54,3 +54,13 @@
       systemd:
         name: nginx
         state: restarted
+        
+    - name: sudo update
+      become: true
+      become_user: root
+      command: apt update
+        
+    - name: sudo upgraded
+      become: true
+      become_user: root
+      command: apt upgrade -y
